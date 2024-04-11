@@ -1,15 +1,14 @@
-import mongoose, {  Document, Model } from "mongoose";
+import mongoose, {  Model, ObjectId } from "mongoose";
 
-interface IUser {
+export interface IUser {
+    _id? : ObjectId, 
     username: string;
     email: string;
     password: string;
     pic?: string; 
 }
 
-interface IUserDocument extends IUser, Document {}
-
-const UserSchema = new mongoose.Schema<IUserDocument>(
+const UserSchema = new mongoose.Schema<IUser>(
     {   
         username: {
             type: String,
@@ -33,13 +32,11 @@ const UserSchema = new mongoose.Schema<IUserDocument>(
             default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAjQarz9WGkjz4-GphE1fJdwwx06OPrRZAgtKlafWc_w",
         },
     },
-   
     {
        
         timestamps: true,
     }
 );
 
-const User_: Model<IUserDocument> = mongoose.model<IUserDocument>('User_', UserSchema);
+export const User_: Model<IUser> = mongoose.model<IUser>('user_', UserSchema);
 
-export = User_;

@@ -1,12 +1,15 @@
 const jwt = require('jsonwebtoken');
 const express = require('express');
-import { JWT_SECRET } from '../config/jsonwebtoken';
 const Router = express.Router();
 const zod = require('zod');
-const User_ = require('../models/Usermodel');
-import { Request, Response } from "express";
+import { IUser , User_} from '../models/Usermodel';
+import { Request, Response, query } from "express";
+import protect from '../middleware/middleware';
 const multer = require('multer')
 
+interface CustomRequest extends Request {
+    user?: IUser; 
+}
 // Configure multer to handle form data
 const storage = multer.memoryStorage(); // You can configure storage as needed
 const upload = multer({ storage: storage });
@@ -47,14 +50,14 @@ Router.post('/signup', upload.none(), async function (req: Request, res: Respons
         username: body.username,
         email: body.email,
         password: body.password,
-      //  pic: body.pic,
+        //  pic: body.pic,
         // pic: picUrl, // Uncomment this line if you're handling file uploads
     });
 
     const userId = newUser._id;
     const token = jwt.sign({
         userId
-    }, JWT_SECRET);
+    }, process.env.JWT_SECRET);
 
     res.json({
         message: "User created successfully",
@@ -89,12 +92,23 @@ Router.post('/signin', upload.none(), async function (req: Request, res: Respons
     console.log(existUser);
     const token = jwt.sign({
         userId: existUser._id,
-    }, JWT_SECRET);
+    }, process.env.JWT_SECRET);
 
     // Send the response once, with the token
     res.json({
         token: token,
     });
 });
+
+Router.get('/params?', protect, async function (req:CustomRequest, res: Response) {
+    const keyword = req.query.search ? {
+        $or: [
+            { name: { $regex: req.query.search, $options: "i" } },
+            { email: { $regex: req.query.search, $options: "i" } },
+        ]
+    } : {};
+    const users = await User_.find(keyword).find({ _id: { $ne: req.user?._id} });
+    res.send(users)
+})
 
 export = Router;

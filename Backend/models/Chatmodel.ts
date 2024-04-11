@@ -1,6 +1,15 @@
-import { timeStamp } from "console";
-import mongoose  from "mongoose";
+import mongoose, { ObjectId }  from "mongoose";
+import { IUser } from '../models/Usermodel';
+import {Imessage} from '../models/Messagemodel'
+export interface IChat {
+    _id:ObjectId,
+    chatName? : string ,
+    isGroupChat? : boolean ,
+    users? :IUser,
+    latestMessage? : Imessage ,
+    groupAdmin? : IUser ,
 
+}
 const ChatSchema = new  mongoose.Schema ({
     chatName  :{
         type : String , trim : true ,
@@ -8,20 +17,19 @@ const ChatSchema = new  mongoose.Schema ({
     isGroupChat : {
         type : Boolean , default : false,
     },
-    users : {
+    users :[ {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User_",
-    },
+        ref: "user_",
+    }],
     latestMessage : {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Message",
     }, groupAdmin: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User_",
+        ref: "user_",
       },
 },{
     timestamps:true 
 });
  
-const Chat = mongoose.model('Chat' , ChatSchema);
-export = Chat ;
+export const Chat = mongoose.model<IChat>('Chat' , ChatSchema);

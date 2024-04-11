@@ -1,9 +1,16 @@
-import mongoose  from "mongoose";
-
+import mongoose, { ObjectId }  from "mongoose";
+import { IUser } from '../models/Usermodel';
+import {IChat} from '../models/Chatmodel'
+export interface Imessage {
+    _id : ObjectId,
+    sender : IUser ,
+    content : string ,
+    chat : IChat ,
+}
 const messageSchema = new mongoose.Schema({
     sender :{
         type : mongoose.Schema.Types.ObjectId,
-        ref : "User_"
+        ref : "user_"
     },
     content :{
         type : String ,
@@ -17,5 +24,4 @@ const messageSchema = new mongoose.Schema({
     timestamps : true 
 })
 
-const Message = mongoose.model('message',messageSchema);
-export = Message ;
+export const Message = mongoose.model<Imessage>('message',messageSchema);
