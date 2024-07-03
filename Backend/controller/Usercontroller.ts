@@ -25,7 +25,7 @@ Router.post('/signup', upload.none(), async function (req: Request, res: Respons
     const body = await req.body;
 
     const { success } = signupBody.safeParse(body);
-    console.log(success);
+   
 
     if (!success) {
         return res.status(401).json({
@@ -71,7 +71,8 @@ const signinBody = zod.object({
 });
 
 Router.post('/signin', upload.none(), async function (req: Request, res: Response) {
-    const { success } = signinBody.safeParse(req.body);
+  
+    const { success } = signinBody.safeParse(await req.body);
     if (!success) {
         return res.status(401).json({
             msg: "Invalid Inputs"
@@ -89,7 +90,7 @@ Router.post('/signin', upload.none(), async function (req: Request, res: Respons
         });
     }
 
-    console.log(existUser);
+   
     const token = jwt.sign({
         userId: existUser._id,
     }, process.env.JWT_SECRET);

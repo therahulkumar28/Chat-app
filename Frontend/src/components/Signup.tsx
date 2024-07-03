@@ -1,20 +1,24 @@
-import { useState } from 'react';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const Signup = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [pic, setPic] = useState(''); 
+const Signup: React.FC = () => {
+  const [name, setName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [pic, setPic] = useState<File | null>(null); 
+  const navigate = useNavigate();
 
-  const handleSignup = async (e:any) => {
+  const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent default form submission
 
     const formData = new FormData();
     formData.append('username', name);
     formData.append('email', email);
     formData.append('password', password);
-    formData.append('pic', pic);
+    if (pic) {
+      formData.append('pic', pic);
+    }
 
     try {
       const response = await axios.post('http://localhost:3000/api/user/signup', formData, {
@@ -22,15 +26,18 @@ const Signup = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
+      localStorage.setItem('userInfo',response.data)
       console.log(response.data);
+      navigate('/chat');
     } catch (error) {
       console.log('axios error', error);
     }
   };
 
-  const handlePicChange = (e:any) => {
-  
-    setPic(e.target.files[0]);
+  const handlePicChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setPic(e.target.files[0]);
+    }
   };
 
   return (

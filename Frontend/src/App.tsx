@@ -1,19 +1,27 @@
 import './App.css'
-import Homepage  from './pages/Homepage'
+import ChatProvider from './context/ChatProvider'
+import Chatpage from './pages/Chatpage'
+import Homepage from './pages/Homepage'
 
-import { Route , Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 function App() {
 
 
   return (
-    <div className="App">
-      <Routes>
+    
+      <ChatProvider>
 
-        <Route path="/" element={<Homepage/>}  />
-        
-      </Routes>
+      
+        <Routes>
 
-    </div>
+          <Route path="/" element={<Homepage />} />
+          <Route path='/chat' element={<Chatpage />} />
+
+        </Routes>
+   
+      </ChatProvider>
+
+
   )
 }
 

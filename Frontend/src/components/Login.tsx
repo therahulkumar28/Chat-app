@@ -1,19 +1,21 @@
-import  { useState } from 'react';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+const Login: React.FC = () => {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const navigate = useNavigate();
 
-  const handleSignin = async (e:any) => {
+  const handleSignin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
+
     try {
       const formData = new FormData();
       formData.append('email', email);
       formData.append('password', password);
-  
+
       const response = await axios.post(
         'http://localhost:3000/api/user/signin',
         formData,
@@ -23,12 +25,12 @@ const Login = () => {
           },
         }
       );
-  
+      localStorage.setItem('userInfo',response.data)
       console.log('Response:', response.data);
-      
+      navigate('/chat');
     } catch (error) {
       console.error('Axios error:', error);
-  
+
       if (error) {
         setErrorMessage('Invalid email or password. Please try again.');
       } else {
@@ -36,7 +38,14 @@ const Login = () => {
       }
     }
   };
-  
+
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
 
   return (
     <div className="mx-auto p-5 bg-gray rounded my-5">
@@ -47,7 +56,7 @@ const Login = () => {
             type="email"
             placeholder="Enter Your Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
             className="block w-full mt-1 p-1.5 border border-gray-300 rounded"
           />
         </label>
@@ -57,7 +66,7 @@ const Login = () => {
             type="password"
             placeholder="Enter Your Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
             className="block w-full mt-1 p-1.5 border border-gray-300 rounded"
           />
         </label>

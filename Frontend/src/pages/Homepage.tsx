@@ -1,10 +1,19 @@
-import { useState } from 'react';
+import { useState , useEffect } from 'react';
 import Login from '../components/Login';
 import Signup from '../components/Signup';
+import { useNavigate  } from 'react-router-dom';
+
 
 const Homepage = () => {
   const [activeTab, setActiveTab] = useState('login');
+  const navigate = useNavigate()
+  useEffect(()=>{
 
+    const userInfo = localStorage.getItem('userInfo');
+      if (userInfo) { 
+        navigate('/chat');
+      }
+  },[navigate])
   const handleTabClick = (tab: 'login' | 'signup') => {
     setActiveTab(tab);
   };
