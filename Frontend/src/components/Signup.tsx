@@ -26,7 +26,7 @@ const Signup: React.FC = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      localStorage.setItem('userInfo',response.data)
+      localStorage.setItem('userInfo',JSON.stringify(response.data))
       console.log(response.data);
       navigate('/chat');
     } catch (error) {

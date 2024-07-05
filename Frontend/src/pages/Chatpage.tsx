@@ -1,4 +1,7 @@
 import Appbar from "../components/Appbar"
+import SideBar from "../components/Sidebar"
+
+
 
 
 const Chatpage = () => {
@@ -6,7 +9,8 @@ const Chatpage = () => {
   return (
     <div>
       <Appbar/>
-      Chatpage</div>
+      <SideBar/>
+    </div>
   )
 }
 

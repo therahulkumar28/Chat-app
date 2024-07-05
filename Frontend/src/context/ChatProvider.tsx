@@ -1,35 +1,52 @@
 import React, { createContext, useEffect, useState, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
-// Define the User interface according to your needs
+// Define the User and Chat interfaces according to your needs
 interface User {
-  id: string;
-  name: string;
+  _id: string;
+  username: string;
   email: string;
+  pic: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Chat {
+  _id: string;
+  chatName: string;
+  isGroupChat: boolean;
+  users: User[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ChatContextType {
   user: User;
   setUser: React.Dispatch<React.SetStateAction<User>>;
+  chats: Chat[];
+  setChats: React.Dispatch<React.SetStateAction<Chat[]>>;
 }
-const defaultState = {
-  user: {
-    id: '',
-    name: '',
-    email: ''
-  },
-  setUser: () => {}
-} as ChatContextType;
 
-// Create the context with a default value of undefined
+const defaultState: ChatContextType = {
+  user: {
+    _id: '',
+    username: '',
+    email: '',
+    pic: '',
+    createdAt: '',
+    updatedAt: ''
+  },
+  setUser: () => {},
+  chats: [],
+  setChats: () => {},
+};
+
+// Create the context with a default value
 export const ChatContext = createContext<ChatContextType>(defaultState);
 
 const ChatProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User>({
-    id: '',
-    name: '',
-    email: ''
-  });
+  const [user, setUser] = useState<User>(defaultState.user);
+  const [chats, setChats] = useState<Chat[]>(defaultState.chats);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,10 +56,10 @@ const ChatProvider = ({ children }: { children: ReactNode }) => {
       setUser(parsedUserInfo);
       navigate('/');
     }
-  }, [navigate]);
+  }, []);
 
   return (
-    <ChatContext.Provider value={{ user, setUser }}>
+    <ChatContext.Provider value={{ user, setUser, chats, setChats }}>
       {children}
     </ChatContext.Provider>
   );

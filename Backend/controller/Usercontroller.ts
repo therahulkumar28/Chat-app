@@ -101,15 +101,23 @@ Router.post('/signin', upload.none(), async function (req: Request, res: Respons
     });
 });
 
-Router.get('/params?', protect, async function (req:CustomRequest, res: Response) {
+Router.get('/params?', protect, async function (req: CustomRequest, res: Response) {
     const keyword = req.query.search ? {
         $or: [
             { name: { $regex: req.query.search, $options: "i" } },
             { email: { $regex: req.query.search, $options: "i" } },
         ]
     } : {};
-    const users = await User_.find(keyword).find({ _id: { $ne: req.user?._id} });
-    res.send(users)
-})
+
+    try {
+        const users = await User_.find(keyword)
+            .find({ _id: { $ne: req.user?._id } })
+            .select('-password'); // Exclude the password field
+        res.send(users);
+    } catch (error) {
+        res.status(500).send({ message: "Error fetching users" });
+    }
+});
+
 
 export = Router;

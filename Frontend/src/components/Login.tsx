@@ -25,7 +25,7 @@ const Login: React.FC = () => {
           },
         }
       );
-      localStorage.setItem('userInfo',response.data)
+      localStorage.setItem('userInfo',JSON.stringify(response.data))
       console.log('Response:', response.data);
       navigate('/chat');
     } catch (error) {

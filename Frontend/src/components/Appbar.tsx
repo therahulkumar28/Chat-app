@@ -1,22 +1,38 @@
-import  { useState, useContext } from "react";
+import { useState, useContext  } from "react";
 import { ChatContext } from "../context/ChatProvider";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faUser } from '@fortawesome/free-solid-svg-icons';
+import SearchBar from "./SearchBar";
+import { useNavigate } from "react-router-dom";
 
 const Appbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user } = useContext(ChatContext);
+  const navigate = useNavigate();
+  const handleSidebarOpen = () => {
+    setSidebarOpen(true);
+  };
 
+  const handleSidebarClose = () => {
+    setSidebarOpen(false);
+  };
+  const handleLogout = () => {
+    localStorage.removeItem('userInfo')
+    navigate('/')
+  }
   return (
-    <div className="flex items-center justify-between p-4 bg-blue-600 text-white">
+    <div className="relative flex items-center justify-between p-4 bg-blue-600 text-white">
       {/* Left: Search Box */}
-      <div className="flex items-center space-x-2">
-        <FontAwesomeIcon icon={faSearch} />
+      <div onClick={handleSidebarOpen} className="flex items-center space-x-2 relative">
+        <div  className="cursor-pointer">
+          <FontAwesomeIcon icon={faSearch} />
+        </div>
         <input
           type="text"
           placeholder="Search..."
-          className="px-2 py-1 text-black rounded focus:outline-none focus:ring focus:border-blue-300"
+          className="px-2 py-1 text-black rounded "
         />
       </div>
 
@@ -26,11 +42,11 @@ const Appbar = () => {
       {/* Right: Menu */}
       <div className="relative">
         <button
-          className="flex items-center space-x-2  focus:outline-none"
+          className="flex items-center space-x-2 focus:outline-none"
           onClick={() => setMenuOpen(!menuOpen)}
         >
-           <FontAwesomeIcon icon={faUser} />
-          <span>{user.name}</span>
+          <FontAwesomeIcon icon={faUser} />
+          <span>{user.username}</span>
         </button>
 
         {menuOpen && (
@@ -41,7 +57,7 @@ const Appbar = () => {
             >
               Profile
             </div>
-            <div className="p-2 hover:bg-gray-200 cursor-pointer">
+            <div onClick={()=>{handleLogout}} className="p-2 hover:bg-gray-200 cursor-pointer">
               Logout
             </div>
           </div>
@@ -58,7 +74,7 @@ const Appbar = () => {
                 className="text-gray-600 font-extrabold hover:text-gray-900"
                 onClick={() => setModalOpen(false)}
               >
-               X
+                X
               </button>
             </div>
             <div className="flex flex-col items-center">
@@ -67,7 +83,7 @@ const Appbar = () => {
                 alt="Profile"
                 className="w-48 h-48 rounded-full mb-4"
               />
-              <div className="text-lg font-bold">{user.name}</div>
+              <div className="text-lg font-bold">{user.username}</div>
               <div className="text-gray-600">{user.email}</div>
               <div className="mt-4 text-center">
                 <p className="text-black">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
@@ -75,6 +91,11 @@ const Appbar = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Sidebar */}
+      {sidebarOpen && (
+        <SearchBar onClose={handleSidebarClose} />
       )}
     </div>
   );

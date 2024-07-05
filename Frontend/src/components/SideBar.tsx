@@ -1,12 +1,14 @@
-import {useState} from 'react'
+
 
 const SideBar = () => {
-    const [search , setSearch]  = useState() ;
-    const [loading , setLoading ] = useState();
-    const [searchResult , setSearchResult] = useState()
-    const [loadingChat , setLoadingChat] = useState()
   return (
-    <div></div>
+    <div className="w-[40%] min-h-screen flex flex-col">
+        <div className="flex flex-wrap m-2 p-2">
+            My Chats
+        </div>
+        
+
+    </div>
   )
 }
 
