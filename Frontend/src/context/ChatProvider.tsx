@@ -10,7 +10,11 @@ interface User {
   createdAt: string;
   updatedAt: string;
 }
-
+interface GroupAdmin {
+  _id :string ,
+  pic : string ,
+  
+}
 interface Chat {
   _id: string;
   chatName: string;
@@ -18,6 +22,8 @@ interface Chat {
   users: User[];
   createdAt: string;
   updatedAt: string;
+  groupAdmin:GroupAdmin  ;
+  __v: number;
 }
 
 export interface ChatContextType {
@@ -25,6 +31,8 @@ export interface ChatContextType {
   setUser: React.Dispatch<React.SetStateAction<User>>;
   chats: Chat[];
   setChats: React.Dispatch<React.SetStateAction<Chat[]>>;
+  selectedChat: Chat | undefined;
+  setSelectedChat: React.Dispatch<React.SetStateAction<Chat | undefined>>;
 }
 
 const defaultState: ChatContextType = {
@@ -39,6 +47,8 @@ const defaultState: ChatContextType = {
   setUser: () => {},
   chats: [],
   setChats: () => {},
+  selectedChat: undefined,
+  setSelectedChat: () => {},
 };
 
 // Create the context with a default value
@@ -47,6 +57,7 @@ export const ChatContext = createContext<ChatContextType>(defaultState);
 const ChatProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User>(defaultState.user);
   const [chats, setChats] = useState<Chat[]>(defaultState.chats);
+  const [selectedChat, setSelectedChat] = useState<Chat | undefined>(defaultState.selectedChat);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -59,7 +70,7 @@ const ChatProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <ChatContext.Provider value={{ user, setUser, chats, setChats }}>
+    <ChatContext.Provider value={{ user, setUser, chats, setChats, selectedChat, setSelectedChat }}>
       {children}
     </ChatContext.Provider>
   );

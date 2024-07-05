@@ -22,7 +22,7 @@ const SearchBar: React.FC<SidebarProps> = ({ onClose }) => {
   const [loading, setLoading] = useState(false);
   const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
   const token = userInfo.token;
-  const { setChats} = useContext(ChatContext)
+  const { setSelectedChat , chats , setChats} = useContext(ChatContext)
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
@@ -39,8 +39,9 @@ const SearchBar: React.FC<SidebarProps> = ({ onClose }) => {
           },
         }
       );
+      if(!chats.find((c) => c._id === response.data._id)) setChats([response.data , ...chats])
       // Assuming response.data is the new chat, add it to the existing chats
-      setChats((prevChats) => [...prevChats, response.data]);
+      setSelectedChat(response.data);
       onClose()
     } catch (error) {
       console.error("Error creating chat", error);
@@ -110,7 +111,8 @@ const SearchBar: React.FC<SidebarProps> = ({ onClose }) => {
                     className="w-12 h-12 rounded-full mr-2"
                   />
                   <div>
-                    <div className="font-bold">{result.username}</div>
+                    <div className="font-bold"><span className="text-blue-300 font-extrabold">User: </span>{result.username}</div>
+                    <div className="font-bold "><span className="text-blue-300 font-extrabold">Email: </span>{result.email}</div>
                   </div>
                 </div>
               ))

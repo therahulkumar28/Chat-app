@@ -1,5 +1,5 @@
+import MyChats from "../Miscllaneous/MyChats"
 import Appbar from "../components/Appbar"
-import SideBar from "../components/Sidebar"
 
 
 
@@ -7,9 +7,15 @@ import SideBar from "../components/Sidebar"
 const Chatpage = () => {
     
   return (
-    <div>
+    <div className="flex flex-col">
+      <div>
+
       <Appbar/>
-      <SideBar/>
+      </div>
+      <div className="flex ">
+      <MyChats/>
+
+      </div>
     </div>
   )
 }
