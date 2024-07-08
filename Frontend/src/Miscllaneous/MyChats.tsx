@@ -57,7 +57,7 @@ const MyChats = () => {
   }, []);
 
   return (
-    <div className="flex flex-col w-full md:w-[30%] lg:w-[25%]  h-screen overflow-y-auto border-r border-gray-300" >
+    <div className="flex flex-col w-full md:w-[30%] lg:w-[25%]  min-h-screen border-r border-gray-300" >
         <div className="flex justify-between items-center h-16 p-2 w-full border-b border-gray-500 ">
         <div className="flex flex-wrap p-2">
           My Chats
